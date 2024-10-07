@@ -67,9 +67,13 @@ commande :
 résulat:
 
  Envoi d’une requête 'Ping'  10.33.79.10 avec 32 octets de données :
+
 Réponse de 10.33.79.10 : octets=32 temps<1ms TTL=128
+
 Réponse de 10.33.79.10 : octets=32 temps<1ms TTL=128
+
 Réponse de 10.33.79.10 : octets=32 temps<1ms TTL=128
+
 Réponse de 10.33.79.10 : octets=32 temps<1ms TTL=128
 
 Statistiques Ping pour 10.33.79.10:
@@ -86,9 +90,13 @@ résulat:
 
 
 Envoi d’une requête 'Ping'  127.0.0.1 avec 32 octets de données :
+
 Réponse de 127.0.0.1 : octets=32 temps<1ms TTL=128
+
 Réponse de 127.0.0.1 : octets=32 temps<1ms TTL=128
+
 Réponse de 127.0.0.1 : octets=32 temps<1ms TTL=128
+
 Réponse de 127.0.0.1 : octets=32 temps<1ms TTL=128
 
 Statistiques Ping pour 127.0.0.1:
@@ -106,8 +114,11 @@ résulat:
 
 
 Envoi d’une requête 'Ping'  10.33.79.254 avec 32 octets de données :
+
 Délai d’attente de la demande dépassé.
+
 Délai d’attente de la demande dépassé.
+
 Délai d’attente de la demande dépassé.
 
 Statistiques Ping pour 10.33.79.254:
@@ -124,8 +135,11 @@ ping 10.33.78.252
 résulat:
 
 Envoi d’une requête 'Ping'  10.33.78.252 avec 32 octets de données :
+
 Délai d’attente de la demande dépassé.
+
 Délai d’attente de la demande dépassé.
+
 Délai d’attente de la demande dépassé.
 
 Statistiques Ping pour 10.33.78.252:
@@ -140,9 +154,13 @@ ping 10.33.78.96
 résultat :
 
 Envoi d’une requête 'Ping'  10.33.78.96 avec 32 octets de données :
+
 Réponse de 10.33.78.96 : octets=32 temps=98 ms TTL=64
+
 Réponse de 10.33.78.96 : octets=32 temps=96 ms TTL=64
+
 Réponse de 10.33.78.96 : octets=32 temps=112 ms TTL=64
+
 Réponse de 10.33.78.96 : octets=32 temps=120 ms TTL=64
 
 Statistiques Ping pour 10.33.78.96:
@@ -159,9 +177,13 @@ ping google.com
 résultat :
 
 Envoi d’une requête 'ping' sur google.com [142.250.178.142] avec 32 octets de données :
+
 Réponse de 142.250.178.142 : octets=32 temps=16 ms TTL=117
+
 Réponse de 142.250.178.142 : octets=32 temps=18 ms TTL=117
+
 Réponse de 142.250.178.142 : octets=32 temps=15 ms TTL=117
+
 Réponse de 142.250.178.142 : octets=32 temps=19 ms TTL=117
 
 Statistiques Ping pour 142.250.178.142:
@@ -199,13 +221,17 @@ commande :
 
 résultat :
 
-Starting Nmap 7.95 ( https://nmap.org ) at 2024-09-27 12:23 Paris, Madrid (heure dÆÚtÚ)
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-09-27 12:23 
+Paris, Madrid (heure dÆÚtÚ)
+
 Stats: 0:01:39 elapsed; 0 hosts completed (0 up), 4095 undergoing ARP Ping Scan
+
 Nmap scan report for 10.33.66.78
 Host is up (0.066s latency).
 MAC Address: E4:B3:18:48:36:68 (Intel Corporate)
-Nmap scan report for 10.33.67.113
-Host is up (0.048s latency).
+
+Nmap scan report for 10.33.67.113 
+Host is up (0.048s latency). 
 MAC Address: D2:91:DE:DF:9A:6E (Unknown)
 
 ### 🌞 Changer d'adresse IP
