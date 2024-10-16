@@ -107,10 +107,18 @@ Firmware Version: VirtualBox
  ```
 [gno@routeur ~]$
 ```
- ping 10.5.1.0 :
 
  ```
-
+[gno@routeur ~]$ ping 10.5.1.11
+PING 10.5.1.11 (10.5.1.11) 56(84) bytes of data.
+64 bytes from 10.5.1.11: icmp_seq=1 ttl=64 time=0.421 ms
+64 bytes from 10.5.1.11: icmp_seq=2 ttl=64 time=0.535 ms
+64 bytes from 10.5.1.11: icmp_seq=3 ttl=64 time=0.378 ms
+64 bytes from 10.5.1.11: icmp_seq=4 ttl=64 time=0.411 ms
+^C
+--- 10.5.1.11 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3105ms
+rtt min/avg/max/mdev = 0.378/0.436/0.535/0.059 ms
  ``` 
 
  ubuntu client 1 :
@@ -154,6 +162,17 @@ Firmware Version: VirtualBox
 ```
 kevin@client1:~/Desktop$ 
 ```
+```
+kevin@client1:~/Desktop$ ping 10.5.1.12
+PING 10.5.1.12 (10.5.1.12) 56(84) bytes of data.
+64 bytes from 10.5.1.12: icmp_seq=1 ttl=64 time=0.512 ms
+64 bytes from 10.5.1.12: icmp_seq=2 ttl=64 time=0.451 ms
+64 bytes from 10.5.1.12: icmp_seq=3 ttl=64 time=0.428 ms
+^C
+--- 10.5.1.12 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 0.428/0.463/0.512/0.035 ms
+```
 
 ubuntu client 2 :
 ```
@@ -194,6 +213,18 @@ Firmware Version: VirtualBox
 ```
 ```
 kevin@client2:~/Desktop$ 
+```
+```
+kevin@client2:~/Desktop$ ping 10.5.1.254
+PING 10.5.1.254 (10.5.1.254) 56(84) bytes of data.
+64 bytes from 10.5.1.254: icmp_seq=1 ttl=64 time=0.430 ms
+64 bytes from 10.5.1.254: icmp_seq=2 ttl=64 time=0.459 ms
+64 bytes from 10.5.1.254: icmp_seq=3 ttl=64 time=0.445 ms
+64 bytes from 10.5.1.254: icmp_seq=4 ttl=64 time=0.433 ms
+^C
+--- 10.5.1.254 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3076ms
+rtt min/avg/max/mdev = 0.430/0.441/0.459/0.011 ms
 ```
 - vous avez bien configuré les adresses IP demandées (un `ip a` suffit hein)
 - vous avez bien configuré les *hostnames* demandés
@@ -414,6 +445,30 @@ public (active)
   - indiquer aux clients que la passerelle dans le réseau ici c'est `10.5.1.254`
   - indiquer aux clients qu'un serveur DNS joignable depuis le réseau c'est `1.1.1.1`
 
+```
+[gno@routeur ~]$ sudo dnf -y install dhcp-server
+```
+```
+[root@routeur gno]# nano /etc/dhcp/dhcpd.conf
+```
+```
+[root@routeur gno]# [root@routeur gno]# cat /etc/dhcp/dhcpd.conf
+#
+# DHCP Server Configuration file.
+#   see /usr/share/doc/dhcp-server/dhcpd.conf.example
+#   see dhcpd.conf(5) man page
+
+subnet 10.5.1.0 netmask 255.255.255.0 {
+    range dynamic-bootp 10.5.1.137 10.5.1.237;
+    option broadcast-address 10.5.1.254;
+    option routers 10.5.1.1;
+    option domain-name-servers 1.1.1.1;
+}
+```
+```
+[root@routeur gno]# systemctl enable --now dhcpdhcp/dhcpd.conf
+```
+
 ### B. Test avec un nouveau client
 
 > *Cette section B. est à réaliser sur une nouvelle machine Ubuntu fraîchement clonée : `client3.tp5.b1`. Vous pouvez éteindre `client1.tp5.b1` et `client2.tp5.b1` pour économiser des ressources.*
@@ -424,6 +479,26 @@ public (active)
 - définissez une IP en DHCP
 - vérifiez que c'est bien une adresse IP entre `.137` et `.237`
 - prouvez qu'il a immédiatement un accès internet
+
+```
+root@client3:/home/kevin/Desktop# cat /etc/netplan/01-netcfg.yaml 
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s8:
+      dhcp4: yes
+```
+```
+root@client3:/home/kevin/Desktop# ping ynov.com
+PING ynov.com (172.67.74.226) 56(84) bytes of data.
+64 bytes from 172.67.74.226: icmp_seq=1 ttl=53 time=15.1 ms
+64 bytes from 172.67.74.226: icmp_seq=2 ttl=53 time=15.3 ms
+^C
+--- ynov.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 15.126/15.215/15.304/0.089 ms
+```
 
 ### C. Consulter le bail DHCP
 
@@ -444,10 +519,36 @@ Il contient toutes les informations liées à l'échange avec le client, notamme
 - toutes les données du serveur DHCP, comme les *baux DHCP*, sont stockés dans le dossier `/var/lib/dhcpd/`
 - afficher le contenu du fichier qui contient les *baux DHCP*
 - on devrait y voir l'IP qui a été proposée au client, ainsi que son adresse MAC
-
+```
+[root@routeur gno]# cat /var/lib/dhcpd/dhcpd.leases
+lease 10.5.1.201 {
+  starts 3 2024/10/16 09:36:04;
+  ends 3 2024/10/16 21:36:04;
+  cltt 3 2024/10/16 09:36:04;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:17:45:6a;
+  client-hostname "client3.tp5.b1";
+}
+```
 ☀️ **Confirmez qu'il s'agit bien de la bonne adresse MAC**
 
 - à faire sur `client3.tp5.b1`
 - consultez l'adresse MAC du client
 - on peut consulter les adresses MAC des cartes réseau avec un simple `ip a` 
-
+```
+root@client3:/home/kevin/Desktop# ip a 
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:17:45:6a brd ff:ff:ff:ff:ff:ff
+    inet 10.5.1.201/24 brd 10.5.1.255 scope global dynamic enp0s8
+       valid_lft 42777sec preferred_lft 42777sec
+    inet6 fe80::a00:27ff:fe17:456a/64 scope link 
+       valid_lft forever preferred_lft forever
+```
